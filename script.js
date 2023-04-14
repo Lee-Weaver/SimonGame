@@ -6,29 +6,76 @@ let playButton = document.querySelector(".play-button");
 let currentScore = document.querySelector(".current-score");
 let highScore = document.querySelector(".high-score");
 
-
-let level = 0;
-const answerArr = [1,2,3,4];
+let score = 0;
+const answerArr = [];
 const playerArr = [];
-playAnswer();
+let IsGameRunning = false;
+gameLoop();
 
 
-yellow.addEventListener("click", () => pushToArr(playerArr, 1));
-blue.addEventListener("click", () => pushToArr(playerArr, 2));
-red.addEventListener("click", () => pushToArr(playerArr, 4));
-green.addEventListener("click", () => pushToArr(playerArr, 3));
+yellow.addEventListener("click", () => {
+    pushToArr(playerArr, 1);
+    checkLength();
+});
+blue.addEventListener("click", () => {
+    pushToArr(playerArr, 2);
+    checkLength();
+});
+red.addEventListener("click", () => {
+    pushToArr(playerArr, 4);
+    checkLength();
+});
+green.addEventListener("click", () => {
+    pushToArr(playerArr, 3);
+    checkLength();
+});
 playButton.addEventListener("click", () => {
     playButton.innerHTML = "Started";
+    IsGameRunning = true;
     gameLoop();
 })
 
 function gameLoop() {
-
+    if (IsGameRunning == true) {
+        AddRandomToAnswer();
+        playAnswer();
+    }
 }
 
+function checkLength() {
+    if (answerArr.length == playerArr.length) {
+        checkAnswer();
+    }
+    }
+
+function checkAnswer() {
+    if (JSON.stringify(playerArr) == JSON.stringify(answerArr)) {
+        score++;
+        currentScore.textContent = score
+        clearAnswer();
+    }
+    else {
+        gameOver();
+    }
+}
+
+
+function gameOver() {
+    score = 0;
+    currentScore.textContent = score;
+    playerArr.length = 0;
+    answerArr.length = 0;
+    IsGameRunning = false;
+    playButton.innerHTML = "Play";
+}
+
+function clearAnswer() {
+    playerArr.length = 0;
+}
 function pushToArr(arr, num) {
     arr.push(num);
     console.log(arr);
+    console.log(answerArr);
 }
 function playersGuess() {
     let arr = [];
@@ -69,4 +116,9 @@ function playAnswer() {
 }
 function randomNums() {
     return Math.floor(Math.random()*4) + 1;
+}
+
+function AddRandomToAnswer() {
+    let num = randomNums();
+    answerArr.push(num);
 }
