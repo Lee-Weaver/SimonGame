@@ -106,6 +106,9 @@ h1 {
     border-radius: 200px;
 }
 
+.unclickable {
+    pointer-events: none;
+}
 
 
 

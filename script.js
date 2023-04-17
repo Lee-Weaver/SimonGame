@@ -5,8 +5,10 @@ let green = document.querySelector(".green");
 let playButton = document.querySelector(".play-button");
 let currentScore = document.querySelector(".current-score");
 let highScore = document.querySelector(".high-score");
+let buttonsContainer = document.querySelector(".buttons");
 
 let score = 0;
+let highScoreNum = 0;
 const answerArr = [];
 const playerArr = [];
 let IsGameRunning = false;
@@ -30,7 +32,7 @@ green.addEventListener("click", () => {
     checkLength();
 });
 playButton.addEventListener("click", () => {
-    playButton.innerHTML = "Started";
+    playButton.innerHTML = "Playing";
     IsGameRunning = true;
     gameLoop();
 })
@@ -52,21 +54,24 @@ function checkAnswer() {
     if (JSON.stringify(playerArr) == JSON.stringify(answerArr)) {
         score++;
         currentScore.textContent = score
+        playButton.innerHTML = "Next";
         clearAnswer();
+        toggleUnclickable();
     }
     else {
         gameOver();
+        toggleUnclickable();
     }
 }
 
-
 function gameOver() {
+    newHighScore();
     score = 0;
     currentScore.textContent = score;
     playerArr.length = 0;
     answerArr.length = 0;
     IsGameRunning = false;
-    playButton.innerHTML = "Play";
+    playButton.innerHTML = "Restart";
 }
 
 function clearAnswer() {
@@ -112,7 +117,8 @@ function playAnswer() {
                 break;
         }
     },(index + 1) * 600)
-    } )
+    } );
+    toggleUnclickable();
 }
 function randomNums() {
     return Math.floor(Math.random()*4) + 1;
@@ -121,4 +127,16 @@ function randomNums() {
 function AddRandomToAnswer() {
     let num = randomNums();
     answerArr.push(num);
+}
+
+function newHighScore() {
+    if (score > highScoreNum) {
+        highScoreNum = score;
+        highScore.textContent = highScoreNum;
+    }
+}
+
+function toggleUnclickable() {
+    buttonsContainer.classList.toggle("unclickable");
+    playButton.classList.toggle("unclickable");
 }
